@@ -1,6 +1,10 @@
+<script setup>
+import AboutContent from '../components/about/index.vue'
+</script>
+
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <AboutContent />
   </div>
 </template>
 

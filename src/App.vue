@@ -1,85 +1,188 @@
 <script setup>
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+
+// 状态变量，用于控制浮窗的显示
+const showWelcome = ref(true)
+
+// 定义欢迎函数，显示浮窗
+function WelcomePage() {
+  showWelcome.value = true
+}
+
+// 关闭浮窗
+function closeWelcome() {
+  showWelcome.value = false
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div class="navbar">
+    <div class="logo">
+      <a href="#" @click="WelcomePage">ZM的博客</a>
     </div>
-  </header>
+    <div class="nav-links">
+      <RouterLink to="/">首页</RouterLink>
+      <RouterLink to="/posts">博客文章</RouterLink>
+      <RouterLink to="#">作品集</RouterLink>
+      <RouterLink to="/about">关于我</RouterLink>
+      <RouterLink to="/contact">联系我</RouterLink>
+    </div>
+  </div>
 
-  <RouterView />
+  <!-- 主内容区域 -->
+  <div class="container">
+    <RouterView />
+  </div>
+
+  <!-- 欢迎浮窗 -->
+  <div v-if="showWelcome" class="modal-overlay">
+    <div class="modal">
+      <h2>欢迎来到我的个人博客</h2>
+      <p>这里是关于我的博客，我会在这里分享我的生活、学习和兴趣爱好。希望你能喜欢我的内容！</p>
+      <p>你可以通过导航栏浏览不同的页面，查看我的博客文章、了解我的故事，或者联系我。</p>
+      <button @click="closeWelcome">确认</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 ZM的博客 保留所有权利。</p>
+      <div class="social-links">
+        <a href="https://github.com/yourname" target="_blank">GitHub</a>
+        <a href="mailto:yourmail@example.com">联系我</a>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 确保在最上层 */
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-top: 2rem;
+  width: 55%;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.modal h2 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.modal p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.modal button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-nav a:first-of-type {
-  border: 0;
+.modal button:hover {
+  background-color: #0056b3;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+body,
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* 导航栏样式 */
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar .logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 40px;
+  font-weight: bold;
+}
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 30px;
+}
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
+  .navbar .nav-links a {
+    margin: 10px 0;
   }
+}
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.footer-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+.footer p {
+  margin: 0;
+}
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.social-links {
+  margin-top: 10px;
+}
+
+.social-links a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  text-decoration: underline;
 }
 </style>

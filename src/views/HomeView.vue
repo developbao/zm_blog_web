@@ -1,9 +1,18 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import ArticleCard from '../components/home/ArticleCard.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
+    <ArticleCard />
   </main>
 </template>
