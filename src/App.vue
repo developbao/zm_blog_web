@@ -22,11 +22,11 @@ function closeWelcome() {
       <a href="#" @click="WelcomePage">ZM的博客</a>
     </div>
     <div class="nav-links">
-      <RouterLink to="/">首页</RouterLink>
-      <RouterLink to="/posts">博客文章</RouterLink>
-      <RouterLink to="#">作品集</RouterLink>
-      <RouterLink to="/about">关于我</RouterLink>
-      <RouterLink to="/contact">联系我</RouterLink>
+      <RouterLink :to="{ path: '/' }" active-class="active-touch">首页</RouterLink>
+      <RouterLink :to="{ path: '/posts' }" active-class="active-touch">博客文章</RouterLink>
+      <RouterLink :to="{ path: '/works' }" active-class="active-touch">作品集</RouterLink>
+      <RouterLink :to="{ path: '/about' }" active-class="active-touch">关于我</RouterLink>
+      <RouterLink :to="{ path: '/contact' }" active-class="active-touch">联系我</RouterLink>
     </div>
   </div>
 
@@ -133,11 +133,18 @@ body {
   font-weight: bold;
 }
 .navbar .nav-links a {
-  color: white;
+  color: rgb(206, 202, 202);
   text-decoration: none;
   margin: 0 15px;
   font-size: 30px;
 }
+
+.navbar .nav-links .active-touch {
+  color: rgb(255, 255, 255);
+  margin: 0 15px;
+  font-size: 30px;
+}
+
 .navbar a:hover {
   text-decoration: underline;
 }

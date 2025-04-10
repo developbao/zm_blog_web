@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ArticleDetail from '@/components/posts/ArticleDetial.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,9 +25,35 @@ const router = createRouter({
       component: () => import('../views/PostListView.vue'),
     },
     {
+      path: '/article/:id',
+      name: 'ArticleDetail',
+      component: ArticleDetail,
+    },
+    {
       path: '/contact',
-      name: '/contact',
+      name: 'contact',
       component: () => import('../views/ContactView.vue'),
+    },
+    {
+      path: '/works',
+      name: 'works',
+      component: () => import('@/views/WorksView.vue'),
+      children: [
+        {
+          path: 'projects',
+          name: 'projects',
+          component: () => import('@/views/works/ProjectView.vue'),
+        },
+        {
+          path: 'codeworks',
+          name: 'codeworks',
+          component: () => import('@/views/works/CodeWorkView.vue'),
+        },
+        {
+          path: '/works',
+          redirect: '/works/codeworks',
+        },
+      ],
     },
   ],
 })

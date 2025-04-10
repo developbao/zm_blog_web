@@ -1,83 +1,106 @@
 <template>
-  <div class="blog-card">
-    <img
-      src="https://cdn.pixabay.com/photo/2016/11/21/17/31/architecture-1846657_1280.jpg"
-      class="cover"
-    />
-    <div class="content">
-      <h2 class="title">深入Vue3：从入门到精通</h2>
-      <p class="summary">
-        Vue3作为最新的框架版本，拥有更强大的性能，更灵活的开发方式和更完善的生态系统，Vue (发音为
-        /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和
-        JavaScript
-        构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。Vue.js是一个MVVM(Model
-        - View - ViewModel)的SPA框架。 Model数据。 View视图。
-        ViewModel连接View与Model的纽带。在head中引入Vue.js包。本地搭建 Vue
-        单页应用，可使用npm安装方式，即本文主要内容。
-      </p>
-      <div class="footer">
-        <span>2025/4/7</span>
+  <div class="article-list p-6 bg-gray-100 rounded-lg shadow-lg max-w-6xl mx-auto">
+    <div v-if="articles.length === 0" class="text-center text-gray-500">暂无文章</div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        v-for="article in articles"
+        :key="article.id"
+        class="article-card transition-transform transform hover:scale-105"
+        @click="goToDetail(article._id)"
+      >
+        <img
+          :src="`http://localhost:3000${article.img}`"
+          alt="封面图"
+          class="article-image rounded-md shadow-md"
+        />
+        <div class="info p-4">
+          <h3 class="article-title">{{ article.title }}</h3>
+          <p class="article-summary">
+            <strong>摘要：</strong>{{ article.summary || '（无摘要）' }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-<style lang="css" scoped>
-.blog-card {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  max-width: 85%;
-  margin: 20px auto;
-}
-.blog-card:hover {
-  transform: translateY(-5px);
+const articles = ref([])
+
+const router = useRouter()
+
+const fetchTopArticles = async () => {
+  const res = await fetch(`http://localhost:3000/articles/top?limit=12`)
+  const data = await res.json()
+  if (data.code === 200) {
+    articles.value = data.list
+  }
 }
 
-.cover {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+const goToDetail = (id) => {
+  router.push(`/article/${id}`)
 }
 
-.content {
-  padding: 16px;
+onMounted(fetchTopArticles)
+</script>
+
+<style scoped>
+.article-list {
+  background-color: #f9fafb; /* 背景颜色 */
+  border-radius: 10px; /* 圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
 }
 
-.title {
-  font-size: 22px;
-  margin-bottom: 10px;
+h2 {
+  margin-bottom: 20px;
+  text-align: center; /* 标题居中 */
+  color: #2d3748; /* 标题颜色 */
 }
 
-.summary {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 15px;
+/* 使用 CSS 网格布局 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 自适应网格 */
+  gap: 30px; /* 网格间距 */
 }
 
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.article-card {
+  background: white;
+  border-radius: 12px; /* 圆角 */
+  cursor: pointer;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease; /* 增加变换效果 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
 }
 
-.date {
-  font-size: 14px;
-  color: #999;
+.article-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* 悬停时增强阴影 */
+  transform: translateY(-4px); /* 悬停时稍微上移 */
 }
 
-.read-more {
-  font-size: 14px;
-  color: #007bff;
-  text-decoration: none;
+.article-image {
+  width: 100%; /* 图片宽度为100% */
+  height: 230px; /* 自动高度 */
+  border-radius: 12px 12px 0 0; /* 圆角 */
 }
-.read-more:hover {
-  text-decoration: underline;
+
+.info {
+  padding: 16px; /* 添加内边距 */
+}
+
+.article-title {
+  font-size: 1.5rem; /* 字体大小 */
+  margin: 0 0 10px; /* 下边距 */
+  color: #2d3748; /* 标题颜色 */
+}
+
+.article-summary {
+  color: #555; /* 概要颜色 */
+  margin: 6px 0; /* 上下间距 */
 }
 </style>

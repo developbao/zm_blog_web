@@ -11,7 +11,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "element-plus": "^2.5.5",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.8",
+    "mitt": "^3.0.1",
     "pinia": "^3.0.1",
+    "unplugin-vue-components": "^28.4.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
