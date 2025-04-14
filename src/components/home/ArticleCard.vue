@@ -10,7 +10,8 @@
         @click="goToDetail(article._id)"
       >
         <img
-          :src="`http://localhost:3000${article.img}`"
+          loading="lazy"
+          :src="`http://47.121.190.121:3000${article.img}`"
           alt="封面图"
           class="article-image rounded-md shadow-md"
         />
@@ -19,6 +20,11 @@
           <p class="article-summary">
             <strong>摘要：</strong>{{ article.summary || '（无摘要）' }}
           </p>
+          <div class="tags-wrapper">
+            <span v-for="(tag, index) in article.tags" :key="index" class="tag">
+              {{ tag }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -34,7 +40,7 @@ const articles = ref([])
 const router = useRouter()
 
 const fetchTopArticles = async () => {
-  const res = await fetch(`http://localhost:3000/articles/top?limit=12`)
+  const res = await fetch(`http://47.121.190.121:3000/articles/top?limit=8`)
   const data = await res.json()
   if (data.code === 200) {
     articles.value = data.list
@@ -70,12 +76,15 @@ h2 {
 
 .article-card {
   background: white;
-  border-radius: 12px; /* 圆角 */
+  border-radius: 12px;
   cursor: pointer;
   transition:
     box-shadow 0.3s ease,
-    transform 0.3s ease; /* 增加变换效果 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+    transform 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* 关键 */
 }
 
 .article-card:hover {
@@ -90,7 +99,10 @@ h2 {
 }
 
 .info {
-  padding: 16px; /* 添加内边距 */
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .article-title {
@@ -100,7 +112,38 @@ h2 {
 }
 
 .article-summary {
-  color: #555; /* 概要颜色 */
-  margin: 6px 0; /* 上下间距 */
+  color: #555;
+  margin: 6px 0;
+  line-height: 1.4;
+  max-height: 4.2em; /* 3行高度 */
+  /* 通过设置了一个最高高度来限制summary的高度 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 限制显示3行 */
+  -webkit-box-orient: vertical;
+}
+
+.tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* 标签之间的间距 */
+  margin-top: auto;
+}
+
+.tag {
+  background-color: #e0f2ff; /* 浅蓝背景 */
+  color: #2563eb; /* 深蓝字体 */
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px; /* 圆角气泡 */
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+  transition: background-color 0.2s ease;
+  cursor: default;
+}
+
+.tag:hover {
+  background-color: #bfdbfe; /* 鼠标悬停时背景稍微变深 */
 }
 </style>

@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute, RouterLink, RouterView } from 'vue-router'
 
 // 状态变量，用于控制浮窗的显示
 const showWelcome = ref(true)
+const route = useRoute()
 
 // 定义欢迎函数，显示浮窗
 function WelcomePage() {
@@ -14,6 +15,15 @@ function WelcomePage() {
 function closeWelcome() {
   showWelcome.value = false
 }
+
+// 监听路由的变化
+watch(
+  () => route.fullPath,
+  (newPath, oldPath) => {
+    console.log('路由变化了！')
+    console.log('from', oldPath, 'to', newPath)
+  },
+)
 </script>
 
 <template>
@@ -49,8 +59,8 @@ function closeWelcome() {
     <div class="footer-content">
       <p>© 2025 ZM的博客 保留所有权利。</p>
       <div class="social-links">
-        <a href="https://github.com/yourname" target="_blank">GitHub</a>
-        <a href="mailto:yourmail@example.com">联系我</a>
+        <a href="https://github.com/developbao" target="_blank">GitHub</a>
+        <a href="mailto:zhangmeng072@gmail.com">联系我</a>
       </div>
     </div>
   </footer>

@@ -1,21 +1,20 @@
 <template>
   <div class="my-article">
-    <div class="article-detail p-6 bg-white rounded-lg shadow-lg max-w-3xl mx-auto" v-if="article">
-      <h2 class="article-title text-4xl font-bold text-gray-800 mb-4">{{ article.title }}</h2>
+    <div class="article-detail" v-if="article">
+      <h2 class="article-title">{{ article.title }}</h2>
 
       <img
         v-if="article.img"
-        :src="`http://localhost:3000${article.img}`"
-        class="article-image rounded-md shadow-md"
+        :src="`http://47.121.190.121:3000${article.img}`"
+        class="article-image"
         alt="Article Image"
       />
-      <div
-        v-html="article.content"
-        class="article-content text-gray-700 leading-relaxed mb-4"
-      ></div>
-      <p class="article-meta text-sm text-gray-500 text-center">
-        作者：<span class="font-semibold">{{ article.authorId }}</span> | 阅读量：<span
-          class="font-semibold"
+
+      <div v-html="article.content" class="article-content"></div>
+
+      <p class="article-meta">
+        作者：<span class="meta-bold">{{ article.authorId }}</span> | 阅读量：<span
+          class="meta-bold"
           >{{ article.readCount }}</span
         >
       </p>
@@ -24,80 +23,117 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css' // 你可以换其他主题，比如 'monokai-sublime.css'
 
 const route = useRoute()
 const article = ref(null)
 
 const fetchArticle = async () => {
-  const res = await fetch(`http://localhost:3000/articles/${route.params.id}`)
+  const res = await fetch(`http://47.121.190.121:3000/articles/${route.params.id}`)
   const data = await res.json()
   if (data.code === 200) {
-    console.log(data.data) // 打印数据以调试
     article.value = data.data
-    await fetch(`http://localhost:3000/articles/${article.value.id}/view`, {
+    document.title = `文章详情 - ${data.data.title}`
+
+    // 等 DOM 渲染后再高亮
+    await nextTick()
+    hljs.highlightAll()
+
+    // 记录浏览
+    await fetch(`http://47.121.190.121:3000/articles/${article.value.id}/view`, {
       method: 'POST',
     })
   }
 }
-console.log(article.content) // 在控制台查看实际渲染的内容
-
 onMounted(fetchArticle)
+</script>
+
+<script>
+export default {
+  beforeRouteLeave(to, from, next) {
+    console.log('you leave this page.')
+    next()
+  },
+}
 </script>
 
 <style scoped>
 .my-article {
-  margin-left: 20px; /* 上下间距 */
-  margin-right: 20px;
-  margin-top: 10px;
+  margin: 10px 20px;
 }
 
 .article-detail {
-  background-color: #ffffff; /* 背景颜色 */
-  border-radius: 10px; /* 圆角 */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
-  padding: 2rem; /* 添加内边距 */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .article-title {
-  color: #4a5568; /* 标题颜色 */
   font-size: 2.5rem;
-  text-align: center; /* 标题居中 */
-  padding: 10px 0;
-
-  margin: 5px;
+  font-weight: bold;
+  color: #2d3748;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .article-image {
-  max-width: 100%; /* 最大宽度 */
-  height: auto; /* 自动高度 */
-  border-radius: 10px; /* 圆角 */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
-  margin-bottom: 1rem; /* 图片下方间距 */
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
 }
 
 .article-content {
-  line-height: 1.6; /* 行高 */
-  margin-top: 1rem; /* 顶部间距 */
+  color: #4a4a4a;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
 .article-meta {
-  text-align: center; /* 元信息居中 */
+  font-size: 0.875rem;
+  color: #666;
+  text-align: center;
+  margin-top: 1rem;
 }
 
-/* 段落样式 */
-p {
-  margin-bottom: 1rem; /* 段落间距 */
+.meta-bold {
+  font-weight: 600;
 }
 
-/* 链接样式 */
-a {
-  color: #1d4ed8; /* 链接颜色 */
-  text-decoration: none; /* 去掉下划线 */
+/* 文章内容中的段落和链接美化 */
+.article-content p {
+  margin-bottom: 1rem;
 }
 
-a:hover {
-  text-decoration: underline; /* 悬停时显示下划线 */
+.article-content a {
+  color: #1e40af;
+  text-decoration: none;
+}
+
+.article-content a:hover {
+  text-decoration: underline;
+}
+
+.article-content pre {
+  background-color: #f6f8fa;
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+  white-space: pre-wrap; /* 关键样式，保留换行！ */
+  word-break: break-word; /* 自动换行 */
+}
+
+.article-content code {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.95rem;
 }
 </style>

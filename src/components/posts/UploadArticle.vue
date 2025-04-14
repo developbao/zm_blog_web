@@ -78,7 +78,7 @@ const editorConfig = {
   placeholder: '请输入内容...',
   MENU_CONF: {
     uploadImage: {
-      server: 'http://localhost:3000/upload',
+      server: 'http://47.121.190.121:3000/upload',
       fieldName: 'file',
       maxFileSize: 5 * 1024 * 1024,
       customInsert(res, insertFn) {
@@ -114,7 +114,7 @@ const handleSubmit = async () => {
   formData.append('file', file.value)
 
   try {
-    const res = await fetch('http://localhost:3000/articles', {
+    const res = await fetch('http://47.121.190.121:3000/articles', {
       method: 'POST',
       body: formData,
     })

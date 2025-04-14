@@ -11,7 +11,7 @@
       @click="goToDetail(article._id)"
     >
       <img
-        :src="`http://localhost:3000${article.img}`"
+        :src="`http://47.121.190.121:3000${article.img}`"
         alt="封面图"
         class="article-image rounded-md shadow-md"
       />
@@ -59,7 +59,7 @@ const router = useRouter()
 
 const fetchArticles = async () => {
   const res = await fetch(
-    `http://localhost:3000/articles/list?page=${page.value}&pageSize=${pageSize}`,
+    `http://47.121.190.121:3000/articles/list?page=${page.value}&pageSize=${pageSize}`,
   )
   const data = await res.json()
   if (data.code === 200) {

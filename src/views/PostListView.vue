@@ -1,10 +1,8 @@
 <template>
   <div class="container">
-    <h1 class="title">博客管理</h1>
-
     <div class="button-group">
+      <button @click="showArticleList" class="btn btn-secondary">查看文章</button>
       <button @click="showUploadArticle" class="btn btn-primary">发布文章</button>
-      <button @click="showArticleList" class="btn btn-secondary">查看文章列表</button>
     </div>
 
     <div class="component-container">
@@ -23,14 +21,25 @@ import { ref } from 'vue'
 import UploadArticle from '@/components/posts/UploadArticle.vue'
 import ArticleList from '@/components/posts/PostCard.vue'
 
-const currentComponent = ref('UploadArticle') // 默认显示上传文章组件
+const currentComponent = ref('ArticleList') // 默认显示文章列表
+const passwordVerified = ref(false)
 
 const showUploadArticle = () => {
-  currentComponent.value = 'UploadArticle' // 显示上传文章组件
+  if (passwordVerified.value) {
+    currentComponent.value = 'UploadArticle'
+  } else {
+    const input = prompt('请输入发布密码：')
+    if (input === 'zhangmeng0601') {
+      passwordVerified.value = true
+      currentComponent.value = 'UploadArticle'
+    } else if (input !== null) {
+      alert('密码错误，无法进入发布页面')
+    }
+  }
 }
 
 const showArticleList = () => {
-  currentComponent.value = 'ArticleList' // 显示文章列表组件
+  currentComponent.value = 'ArticleList'
 }
 </script>
 
@@ -44,13 +53,6 @@ const showArticleList = () => {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
 }
 
-.title {
-  font-size: 2rem; /* 标题字体大小 */
-  color: #333; /* 字体颜色 */
-  margin-bottom: 20px; /* 下边距 */
-  text-align: center; /* 居中 */
-}
-
 .button-group {
   display: flex;
   justify-content: center; /* 水平居中按钮 */
@@ -59,14 +61,18 @@ const showArticleList = () => {
 }
 
 .btn {
-  padding: 10px 20px; /* 按钮内边距 */
-  border: none; /* 去掉边框 */
-  border-radius: 6px; /* 圆角 */
-  font-size: 1rem; /* 字体大小 */
-  cursor: pointer; /* 鼠标指针 */
-  transition:
-    background-color 0.3s,
-    transform 0.3s; /* 过渡效果 */
+  gap: 20px;
+  padding: 10px;
+  margin: 10px;
+  flex-wrap: wrap;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 40px 12px rgba(0, 0, 0, 0.06);
+  transition: color 0.3s ease;
+  text-align: center;
+  flex: 1 0 21%;
+  font-size: 30px;
+  border-radius: 10px;
+  text-decoration: none;
 }
 
 .btn-primary {
