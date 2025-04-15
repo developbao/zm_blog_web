@@ -30,12 +30,7 @@ const router = createRouter({
       name: 'ArticleDetail',
       component: () => import('@/components/posts/ArticleDetial.vue'),
     },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: () => import('../views/ContactView.vue'),
-      meta: { title: '联系我' },
-    },
+
     {
       path: '/works',
       name: 'works',

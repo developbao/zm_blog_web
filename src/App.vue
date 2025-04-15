@@ -36,7 +36,6 @@ watch(
       <RouterLink :to="{ path: '/posts' }" active-class="active-touch">博客文章</RouterLink>
       <RouterLink :to="{ path: '/works' }" active-class="active-touch">作品集</RouterLink>
       <RouterLink :to="{ path: '/about' }" active-class="active-touch">关于我</RouterLink>
-      <RouterLink :to="{ path: '/contact' }" active-class="active-touch">联系我</RouterLink>
     </div>
   </div>
 

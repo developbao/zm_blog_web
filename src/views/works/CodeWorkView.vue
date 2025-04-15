@@ -29,13 +29,11 @@
 import { ref } from 'vue'
 
 import MyClock from '@/components/codeworks/MyClock.vue'
-import MyCard from '@/components/codeworks/MyCard.vue'
-import MyTable from '@/components/codeworks/MyTable.vue'
+import MyClockAo from '@/components/codeworks/MyClockAo.vue'
 
 const components = [
   { name: 'MyClock', label: '时钟组件', component: MyClock },
-  { name: 'MyCard', label: '卡片组件', component: MyCard },
-  { name: 'MyTable', label: '表格组件', component: MyTable },
+  { name: 'Practice', label: '我的练习', component: MyClockAo },
 ]
 
 const currentComponent = ref(components[0])
@@ -111,5 +109,35 @@ function selectComponent(comp) {
   border-radius: 6px;
   background-color: #fafafa;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+/* 追加在原 CSS 最后 */
+@media (max-width: 768px) {
+  .code-work-view {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .preview-area {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .component-item {
+    font-size: 16px;
+    padding: 8px 12px;
+  }
+
+  .preview-title {
+    font-size: 16px;
+  }
+
+  .preview-box {
+    padding: 15px;
+  }
 }
 </style>

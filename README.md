@@ -609,7 +609,463 @@ import ArticleCard from '../components/home/ArticleCard.vue'
 
 ```
 
-#### 组件ArticleCard.vue
+### AboutView.vue
+
+```
+<script setup>
+import AboutContent from '../components/about/index.vue'
+</script>
+
+<template>
+  <div class="about">
+    <AboutContent />
+  </div>
+</template>
+
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
+
+```
+
+### PostListView.vue
+
+```
+<template>
+  <div class="container">
+    <div class="button-group">
+      <button @click="showArticleList" class="btn btn-secondary">查看文章</button>
+      <button @click="showUploadArticle" class="btn btn-primary">发布文章</button>
+    </div>
+
+    <div class="component-container">
+      <div v-if="currentComponent === 'UploadArticle'">
+        <UploadArticle />
+      </div>
+      <div v-else-if="currentComponent === 'ArticleList'">
+        <ArticleList />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import UploadArticle from '@/components/posts/UploadArticle.vue'
+import ArticleList from '@/components/posts/PostCard.vue'
+
+const currentComponent = ref('ArticleList') // 默认显示文章列表
+const passwordVerified = ref(false)  // 这个布尔值控制是否已经验证过发布密码，用来保护上传功能。（有点草率，后期会进行加工）
+
+const showUploadArticle = () => {
+  if (passwordVerified.value) {
+    currentComponent.value = 'UploadArticle'
+  } else {
+    const input = prompt('请输入发布密码：')
+    if (input === 'zhangmeng0601') {
+      passwordVerified.value = true
+      currentComponent.value = 'UploadArticle'
+    } else if (input !== null) {
+      alert('密码错误，无法进入发布页面')
+    }
+  }
+}
+
+const showArticleList = () => {
+  currentComponent.value = 'ArticleList'
+}
+</script>
+
+<style scoped>
+.container {
+  width: 90%; /* 最大宽度 */
+  margin: 0 auto; /* 水平居中 */
+  padding: 20px; /* 内边距 */
+  background-color: #f9f9f9; /* 背景颜色 */
+  border-radius: 12px; /* 圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+}
+
+.button-group {
+  display: flex;
+  justify-content: center; /* 水平居中按钮 */
+  gap: 20px; /* 按钮之间的间距 */
+  margin-bottom: 20px; /* 下边距 */
+}
+
+.btn {
+  gap: 20px;
+  padding: 10px;
+  margin: 10px;
+  flex-wrap: wrap;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 40px 12px rgba(0, 0, 0, 0.06);
+  transition: color 0.3s ease;
+  text-align: center;
+  flex: 1 0 21%;
+  font-size: 30px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #007bff; /* 主按钮颜色 */
+  color: white; /* 字体颜色 */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* 主按钮悬停颜色 */
+  transform: translateY(-2px); /* 悬停时稍微上移 */
+}
+
+.btn-secondary {
+  background-color: #28a745; /* 次按钮颜色 */
+  color: white; /* 字体颜色 */
+}
+
+.btn-secondary:hover {
+  background-color: #218838; /* 次按钮悬停颜色 */
+  transform: translateY(-2px); /* 悬停时稍微上移 */
+}
+
+.component-container {
+  margin-top: 20px; /* 顶部间距 */
+}
+</style>
+
+```
+
+使用v-if 和 v-else-if 判断当前组件名，条件满足就渲染对应的组件。
+
+密码是写死在前端的，容易被看到。（更安全的做法是把密码验证交给后端，避免暴露在前端）
+
+使用动态组件 `<component :is="currentComponent" />` 替代多个 `v-if`
+
+### CodeWorkView.vue
+
+```
+<template>
+  <div class="code-work-view">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <h2 class="title">组件列表</h2>
+      <ul class="component-list">
+        <li
+          v-for="comp in components"
+          :key="comp.name"
+          @click="selectComponent(comp)"
+          :class="['component-item', { active: comp.name === currentComponent.name }]"
+        >
+          {{ comp.label }}
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 右侧组件展示区域 -->
+    <main class="preview-area">
+      <h3 class="preview-title">预览：{{ currentComponent.label }}</h3>
+      <div class="preview-box">
+        <component :is="currentComponent.component" />
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+import MyClock from '@/components/codeworks/MyClock.vue'
+
+
+
+const components = [
+  { name: 'MyClock', label: '时钟组件', component: MyClock },
+]
+
+const currentComponent = ref(components[0])
+
+function selectComponent(comp) {
+  currentComponent.value = comp
+}
+</script>
+
+<style scoped>
+.code-work-view {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f3f3f3;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.component-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.component-item {
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background-color 0.2s;
+}
+
+.component-item:hover {
+  background-color: #e0eaff;
+}
+
+.component-item.active {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+}
+
+.preview-area {
+  flex: 1;
+  padding: 30px;
+  background-color: #fff;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.preview-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.preview-box {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+</style>
+
+```
+
+考虑懒加载，减少页面加载时的性能开销。
+
+使用router来实现组件的路由控制
+
+响应式布局
+
+```
+/* 追加在原 CSS 最后 */
+@media (max-width: 768px) {
+  .code-work-view {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .preview-area {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .component-item {
+    font-size: 16px;
+    padding: 8px 12px;
+  }
+
+  .preview-title {
+    font-size: 16px;
+  }
+
+  .preview-box {
+    padding: 15px;
+  }
+}
+
+
+```
+
+### ProjectView.vue
+
+```
+<template>
+  <div class="project-view">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <h2 class="title">我的项目</h2>
+      <ul class="project-list">
+        <li
+          v-for="project in projects"
+          :key="project.name"
+          @click="selectProject(project)"
+          :class="['project-item', { active: project.name === currentProject.name }]"
+        >
+          {{ project.name }}
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 右侧项目详情展示 -->
+    <main class="detail-area">
+      <h3 class="detail-title">{{ currentProject.name }}</h3>
+      <p>
+        <strong>演示网址：</strong>
+        <a :href="currentProject.demoUrl" target="_blank">{{ currentProject.demoUrl }}</a>
+      </p>
+      <p>
+        <strong>GitHub：</strong>
+        <a :href="currentProject.githubUrl" target="_blank">{{ currentProject.githubUrl }}</a>
+      </p>
+      <div class="project-image">
+        <img :src="currentProject.image" alt="项目截图" loading="lazy" />
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import carImg from '@/assets/project_image/car.png'
+import blogImg from '@/assets/project_image/blog.jpg'
+import airlineImg from '@/assets/project_image/airline.jpg'
+
+const projects = [
+  {
+    name: '个人博客系统',
+    demoUrl: 'http://47.121.190.121:8080/',
+    githubUrl: 'https://github.com/developbao/zm_blog_web',
+    image: blogImg,
+  },
+  {
+    name: '二手车交易平台',
+    demoUrl: 'http://47.121.190.121:8099/',
+    githubUrl:
+      'https://github.com/developbao/Second-hand-Car-Transaction-and-Data-Analysis-Platform',
+    image: carImg,
+  },
+  {
+    name: '飞机购票系统',
+    demoUrl: '#',
+    githubUrl: 'https://github.com/developbao/Airline-Ticketing-System',
+    image: airlineImg,
+  },
+]
+
+const currentProject = ref(projects[0])
+
+function selectProject(project) {
+  currentProject.value = project
+}
+</script>
+
+<style scoped>
+.project-view {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f3f3f3;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-item {
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background-color 0.2s;
+}
+
+.project-item:hover {
+  background-color: #e0eaff;
+}
+
+.project-item.active {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+}
+
+.detail-area {
+  flex: 1;
+  padding: 30px;
+  background-color: #fff;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.detail-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.project-image {
+  margin-top: 20px;
+}
+
+.project-image img {
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+```
+
+## components部分
+
+#### ArticleCard.vue
 
 src\components\home\ArticleCard.vue
 
@@ -898,7 +1354,7 @@ onMounted(async () => {
 
 （将在博客文章展示的组件中详细讲述）
 
-#### 组件ArticleDetail.vue
+#### ArticleDetail.vue
 
 ```javascript
 <template>
@@ -1063,4 +1519,357 @@ const fetchArticle = async () => {
     })
   }
 }
+```
+
+#### UploadArticle.vue
+
+```
+<template>
+  <div class="upload-article">
+    <h2>上传文章</h2>
+    <form @submit.prevent="handleSubmit">
+      <div class="form-group">
+        <label for="titleInput">标题：</label>
+        <input type="text" id="titleInput" v-model="title" required />
+      </div>
+
+      <div class="form-group">
+        <label>内容：</label>
+        <div class="editor-container">
+          <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+          <Editor
+            style="height: 400px; overflow-y: auto"
+            v-model="content"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreated"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="authorInput">作者：</label>
+        <input type="text" id="authorInput" v-model="authorId" required />
+      </div>
+
+      <div class="form-group">
+        <label for="summaryInput">摘要：</label>
+        <input type="text" id="summaryInput" v-model="summary" />
+      </div>
+
+      <div class="form-group">
+        <label for="tagsInput">标签（用逗号分隔）：</label>
+        <input type="text" id="tagsInput" v-model="tags" />
+      </div>
+
+      <div class="form-group">
+        <label for="categoryIdInput">分类 ID：</label>
+        <input type="text" id="categoryIdInput" v-model="categoryId" />
+      </div>
+
+      <div class="form-group">
+        <label for="fileInput">封面图：</label>
+        <input type="file" id="fileInput" @change="handleFileChange" accept="image/*" required />
+      </div>
+
+      <button type="submit">上传文章</button>
+    </form>
+
+    <div v-if="result" :class="resultClass">{{ result }}</div>
+  </div>
+</template>
+
+<script setup>
+import { ref, shallowRef, onBeforeUnmount } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css'
+
+// 表单字段 这些变量 都和表单绑定
+const title = ref('')
+const content = ref('') // WangEditor绑定的是 HTML 格式的内容
+const authorId = ref('')
+const summary = ref('')
+const tags = ref('')
+const categoryId = ref('')
+const file = ref(null)
+const result = ref('')
+const resultClass = ref('')
+
+// WangEditor配置
+const editorRef = shallowRef()
+const mode = 'simple'
+const toolbarConfig = {}
+
+const editorConfig = {
+  placeholder: '请输入内容...',
+  MENU_CONF: {
+    uploadImage: {
+      server: 'http://47.121.190.121:3000/upload',
+      fieldName: 'file',
+      maxFileSize: 5 * 1024 * 1024,
+      customInsert(res, insertFn) {
+        if (res.code === 200 && res.data?.fileUrl) {
+          insertFn(res.data.fileUrl)
+        } else {
+          console.warn('图片上传失败:', res)
+        }
+      },
+    },
+  },
+}
+
+const handleCreated = (editor) => {
+  editorRef.value = editor
+}  // 读取上传的文件
+onBeforeUnmount(() => {
+  editorRef.value?.destroy()
+})  // 组件卸载之前，销毁编辑器，防止内存泄漏
+
+const handleFileChange = (event) => {
+  file.value = event.target.files[0]
+}
+
+const handleSubmit = async () => {
+  const formData = new FormData()
+  formData.append('title', title.value) // 添加各个字段
+  formData.append('content', content.value)
+  formData.append('authorId', authorId.value)
+  formData.append('summary', summary.value)
+  formData.append('tags', JSON.stringify(tags.value.split(',').map((t) => t.trim())))
+  formData.append('categoryId', categoryId.value)
+  formData.append('file', file.value)
+
+  try {
+    const res = await fetch('http://47.121.190.121:3000/articles', {
+      method: 'POST',  // POST方法
+      body: formData,
+    })
+
+    const resultData = await res.json()
+
+    if (resultData.code === 200) {
+      result.value = '文章上传成功！'
+      resultClass.value = 'text-green-500'
+    } else {
+      result.value = `上传失败：${resultData.message}`
+      resultClass.value = 'text-red-500'
+    }
+  } catch (error) {
+    result.value = `请求错误：${error.message}`
+    resultClass.value = 'text-red-500'
+  }
+}
+</script>
+
+<style scoped>
+.upload-article {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f5f5f5; /* 页面背景颜色 */
+  border-radius: 10px; /* 圆角 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+  min-width: 800px; /* 最大宽度 */
+  margin: 0 auto; /* 居中 */
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center; /* 标题居中 */
+  font-size: 24px; /* 标题大小 */
+  color: #333; /* 标题颜色 */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block; /* 标签显示为块级元素 */
+  margin-bottom: 5px; /* 标签下方间距 */
+  font-weight: bold; /* 加粗 */
+}
+
+input[type='text'],
+input[type='file'],
+textarea {
+  width: 100%; /* 100%宽度 */
+  padding: 10px; /* 内边距 */
+  border: 1px solid #ccc; /* 边框 */
+  border-radius: 5px; /* 圆角 */
+  box-sizing: border-box; /* 包含内边距和边框 */
+  transition: border-color 0.3s; /* 边框颜色过渡 */
+}
+
+input[type='text']:focus,
+input[type='file']:focus {
+  border-color: #007bff; /* 聚焦时边框颜色 */
+  outline: none; /* 去除默认轮廓 */
+}
+
+button {
+  width: 100%; /* 按钮宽度100% */
+  padding: 10px; /* 按钮内边距 */
+  background-color: #007bff; /* 按钮背景色 */
+  color: white; /* 按钮文字颜色 */
+  border: none; /* 去除边框 */
+  border-radius: 5px; /* 圆角 */
+  cursor: pointer; /* 鼠标悬停为手指 */
+  transition: background-color 0.3s; /* 背景色过渡 */
+}
+
+button:hover {
+  background-color: #0056b3; /* 鼠标悬停时按钮颜色 */
+}
+
+.text-green-500 {
+  color: green;
+}
+
+.text-red-500 {
+  color: red;
+}
+
+.editor-container {
+  border: 1px solid #ccc; /* 编辑器容器边框 */
+  border-radius: 5px; /* 圆角 */
+  overflow: hidden; /* 超出部分隐藏 */
+}
+</style>
+
+```
+
+v-model="title":绑定输入值到title响应式变量
+
+required：浏览器层面验证。
+
+这里引入了一个wangEditor作为富文本编辑器
+
+```
+const editorRef = shallowRef()  // 浅层响应式引用，因为这个实例对象不需要深度追踪（有利于性能优化）
+const mode = 'simple'  // 编辑器的模式，简单模式
+const toolbarConfig = {}  // 默认工具栏配置
+
+const editorConfig = {
+  placeholder: '请输入内容...',
+  MENU_CONF: {
+    uploadImage: {
+      server: 'http://47.121.190.121:3000/upload',
+      fieldName: 'file',
+      maxFileSize: 5 * 1024 * 1024,
+      customInsert(res, insertFn) {
+        if (res.code === 200 && res.data?.fileUrl) {
+          insertFn(res.data.fileUrl)
+        } else {
+          console.warn('图片上传失败:', res)
+        }
+      },
+    },
+  },
+}
+
+```
+
+about/index.vue
+
+```
+<template>
+  <div class="about-container">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/1?v=4" alt="头像" />
+
+    <h1>你好，我是ZM 👋</h1>
+    <p>
+      欢迎来到我的博客！我是一名软件开发者，热爱技术、写作与分享。在这里，我记录学习过程、开发经验、以及生活中的一些灵感。
+    </p>
+
+    <h2>技能标签</h2>
+    <ul class="skills">
+      <li>Vue 3</li>
+      <li>JavaScript</li>
+      <li>前端</li>
+      <li>Django</li>
+      <li>MongoDB</li>
+      <li>MySQL</li>
+    </ul>
+
+    <h2>联系方式</h2>
+    <ul class="contact">
+      <li>📧 Email: zhangmeng072@gmail.com</li>
+      <li>
+        📁 GitHub: <a href="https://github.com/developbao" target="_blank">github.com/developbao</a>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+// 暂时无需逻辑
+</script>
+
+<script>
+export default {
+  name: 'AboutContent',
+}
+</script>
+
+<style scoped>
+.about-container {
+  width: 70%;
+  height: 600px;
+  margin: auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 1px 1px 40px 12px rgba(0, 0, 0, 0.06);
+  line-height: 1.6;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+h1,
+h2 {
+  color: #333;
+  margin-top: 20px;
+}
+
+p {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 20px 0;
+}
+
+.skills li {
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.contact li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.contact a {
+  color: #007bff;
+  text-decoration: none;
+}
+.contact a:hover {
+  text-decoration: underline;
+}
+</style>
+
 ```

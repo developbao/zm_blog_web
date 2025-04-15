@@ -1,28 +1,36 @@
 <template>
   <div class="about-container">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/1?v=4" alt="头像" />
+    <img
+      class="avatar"
+      src="https://img1.baidu.com/it/u=418662815,4006323239&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"
+      alt="头像"
+    />
 
     <h1>你好，我是ZM 👋</h1>
     <p>
-      欢迎来到我的博客！我是一名前端开发者，热爱技术、写作与分享。在这里，我记录学习过程、开发经验、以及生活中的一些灵感。
+      欢迎来到我的博客！我是一名软件开发者，热爱技术、写作与分享。在这里，我记录学习过程、开发经验、以及生活中的一些灵感。
     </p>
 
     <h2>技能标签</h2>
     <ul class="skills">
       <li>Vue 3</li>
-      <li>Node.js</li>
+      <li>JavaScript</li>
+      <li>前端</li>
+      <li>Django</li>
       <li>MongoDB</li>
-      <li>JavaScript / TypeScript</li>
-      <li>前端工程化</li>
+      <li>MySQL</li>
     </ul>
 
     <h2>联系方式</h2>
-    <ul class="contact">
-      <li>📧 Email: zm@example.com</li>
-      <li>
-        📁 GitHub: <a href="https://github.com/yourname" target="_blank">github.com/yourname</a>
-      </li>
-    </ul>
+    <address>
+      <ul class="contact">
+        <li>📧 Email: zhangmeng072@gmail.com</li>
+        <li>
+          📁 GitHub:
+          <a href="https://github.com/developbao" target="_blank">github.com/developbao</a>
+        </li>
+      </ul>
+    </address>
   </div>
 </template>
 
@@ -38,7 +46,7 @@ export default {
 
 <style scoped>
 .about-container {
-  width: 70%;
+  width: 80%;
   height: 600px;
   margin: auto;
   padding: 20px;

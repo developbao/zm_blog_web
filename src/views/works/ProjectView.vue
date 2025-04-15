@@ -27,7 +27,7 @@
         <a :href="currentProject.githubUrl" target="_blank">{{ currentProject.githubUrl }}</a>
       </p>
       <div class="project-image">
-        <img :src="currentProject.image" alt="项目截图" />
+        <img :src="currentProject.image" alt="项目截图" loading="lazy" />
       </div>
     </main>
   </div>
@@ -36,25 +36,28 @@
 <script setup>
 import { ref } from 'vue'
 import carImg from '@/assets/project_image/car.png'
+import blogImg from '@/assets/project_image/blog.jpg'
+import airlineImg from '@/assets/project_image/airline.jpg'
 
 const projects = [
   {
     name: '个人博客系统',
-    demoUrl: 'https://todo.example.com',
-    githubUrl: 'https://github.com/yourname/todo-app',
-    image: 'https://via.placeholder.com/600x300?text=Todo+App',
+    demoUrl: 'http://47.121.190.121:8080/',
+    githubUrl: 'https://github.com/developbao/zm_blog_web',
+    image: blogImg,
   },
   {
     name: '二手车交易平台',
-    demoUrl: 'https://myblog.example.com',
-    githubUrl: 'https://github.com/yourname/myblog',
+    demoUrl: 'http://47.121.190.121:8099/',
+    githubUrl:
+      'https://github.com/developbao/Second-hand-Car-Transaction-and-Data-Analysis-Platform',
     image: carImg,
   },
   {
     name: '飞机购票系统',
-    demoUrl: 'https://img.example.com',
-    githubUrl: 'https://github.com/yourname/img-server',
-    image: 'https://via.placeholder.com/600x300?text=Image+Server',
+    demoUrl: '#',
+    githubUrl: 'https://github.com/developbao/Airline-Ticketing-System',
+    image: airlineImg,
   },
 ]
 
